@@ -1,3 +1,5 @@
+import pyb
+
 from pnc.uart_request.value import *
 from pnc.modules.base import ModuleBase
 
@@ -27,11 +29,13 @@ class LCD_16x2(ModuleBase):
         self.column = req.data["column"]
         self.row = req.data["row"]
 
-        self.init()
+        # pyb.delay(10)
+        #
+        # self.init()
 
     def init(self):
         self.send(self.CMD_INIT)
-    
+
     def home(self):
         self.send(self.CMD_HOME)
 
@@ -47,8 +51,8 @@ class LCD_16x2(ModuleBase):
     def set_blink(self, state: bool):
         self.send(self.CMD_SET_BLINK, args = [BooleanValue(state)])
 
-    def set_position(self, row: int, col: int):
-        self.send(self.CMD_SET_POSITION, args = [UInt8Value(row), UInt8Value(col)])
+    def set_position(self, row: int, column: int):
+        self.send(self.CMD_SET_POSITION, args = [UInt8Value(row), UInt8Value(column)])
 
     def set_backlight(self, backlight: int):
         self.send(self.CMD_SET_BACKLIGHT, args = [UInt8Value(backlight)])

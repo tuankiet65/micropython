@@ -1,4 +1,5 @@
 from pnc.uart_request.request import Request, PacketResponse
+import pyb
 
 class ModuleBase:
     port = None
@@ -11,4 +12,5 @@ class ModuleBase:
         self.get_module_info()
 
     def send(self, *args, **kwargs) -> PacketResponse:
-        return self.port.send(*args, **kwargs)
+        result = self.port.send(*args, **kwargs)
+        return result

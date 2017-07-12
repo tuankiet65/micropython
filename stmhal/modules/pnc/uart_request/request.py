@@ -17,6 +17,9 @@ class Request:
         if args is None:
             args = []
 
+        # Clear any remaining data
+        self.port.read(self.port.any())
+
         packet = PacketRequest(request_type, args)
         packet.send(self.port)
 
@@ -81,13 +84,16 @@ class PacketResponse(PacketBase):
 
         if self.raw_data_size > 0:
             self.raw_data = port.read(self.raw_data_size)
-            if self.raw_data is None:
+            if (self.raw_data is None) or (len(self.raw_data) != self.raw_data_size):
                 raise TimeoutException
         else:
             self.raw_data = b''
 
     def raise_for_status(self):
         if self.status_code == self.STATUS_CODE_FAILURE:
+            if self.raw_data_size == 0:
+                return
+                raise Exception("Unknown error, module does not return error code")
             # TODO add various type of failure codes
             if self.data[0] == self.ERROR_INVALID_COMMAND:
                 raise Exception("Invalid command")
